@@ -187,8 +187,8 @@ class VisiteControllerTest {
     }
 
     @Test
-    void getAllVisites_retourne302SansAuthentification() throws Exception {
+    void getAllVisites_retourne401SansAuthentification() throws Exception {
         mockMvc.perform(get("/api/visites"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 }

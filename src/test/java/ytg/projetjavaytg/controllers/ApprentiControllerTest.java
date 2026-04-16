@@ -129,8 +129,8 @@ class ApprentiControllerTest {
     }
 
     @Test
-    void getAllApprentis_retourne302SansAuthentification() throws Exception {
+    void getAllApprentis_retourne401SansAuthentification() throws Exception {
         mockMvc.perform(get("/api/apprentis"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 }

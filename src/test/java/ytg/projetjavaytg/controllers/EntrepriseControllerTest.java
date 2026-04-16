@@ -126,8 +126,8 @@ class EntrepriseControllerTest {
     }
 
     @Test
-    void getAllEntreprises_retourne302SansAuthentification() throws Exception {
+    void getAllEntreprises_retourne401SansAuthentification() throws Exception {
         mockMvc.perform(get("/api/entreprises"))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isUnauthorized());
     }
 }
