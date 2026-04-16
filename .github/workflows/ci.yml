@@ -27,7 +27,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready -U postgres -d testdb
+          --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -67,5 +67,4 @@ jobs:
           name: JUnit
           path: 'target/surefire-reports/*.xml'
           reporter: java-junit
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
