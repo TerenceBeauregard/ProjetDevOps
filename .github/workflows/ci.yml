@@ -68,3 +68,22 @@ jobs:
           path: 'target/surefire-reports/*.xml'
           reporter: java-junit
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6️⃣ Générer le rapport JaCoCo
+      - name: Generate JaCoCo Coverage Report
+        run: mvn jacoco:report
+
+      # 7️⃣ Uploader le rapport JaCoCo
+      - name: Upload JaCoCo Coverage Report
+        if: success() || failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-coverage-report
+          path: target/site/jacoco/
+          retention-days: 30
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
