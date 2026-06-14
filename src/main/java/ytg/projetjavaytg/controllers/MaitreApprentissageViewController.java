@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ytg.projetjavaytg.dto.MaitreApprentissageFormDTO;
 import ytg.projetjavaytg.models.MaitreApprentissage;
 import ytg.projetjavaytg.services.EntrepriseService;
 import ytg.projetjavaytg.services.MaitreApprentissageService;
@@ -38,10 +39,17 @@ public class MaitreApprentissageViewController {
     }
 
     @PostMapping("/create")
-    public String createMaitre(@ModelAttribute MaitreApprentissage maitre,
+    public String createMaitre(@ModelAttribute MaitreApprentissageFormDTO form,
                               @RequestParam Long entrepriseId,
                               RedirectAttributes redirectAttributes) {
         try {
+            MaitreApprentissage maitre = new MaitreApprentissage();
+            maitre.setNom(form.getNom());
+            maitre.setPrenom(form.getPrenom());
+            maitre.setPoste(form.getPoste());
+            maitre.setEmail(form.getEmail());
+            maitre.setTelephone(form.getTelephone());
+            maitre.setRemarques(form.getRemarques());
             entrepriseService.getEntrepriseById(entrepriseId).ifPresent(maitre::setEntreprise);
             maitreApprentissageService.createMaitreApprentissage(maitre);
             redirectAttributes.addFlashAttribute("success", "Le maître d'apprentissage a été créé avec succès !");

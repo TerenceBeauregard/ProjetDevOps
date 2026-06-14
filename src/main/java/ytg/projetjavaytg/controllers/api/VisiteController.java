@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ytg.projetjavaytg.dto.CreateVisiteDTO;
+import ytg.projetjavaytg.dto.VisiteDTO;
+import ytg.projetjavaytg.models.Apprenti;
 import ytg.projetjavaytg.models.Visite;
 import ytg.projetjavaytg.services.VisiteService;
 import ytg.projetjavaytg.services.ApprentiService;
@@ -41,7 +43,16 @@ public class VisiteController {
     }
 
     @PostMapping
-    public ResponseEntity<Visite> createVisite(@RequestBody Visite visite) {
+    public ResponseEntity<Visite> createVisite(@RequestBody VisiteDTO dto) {
+        Apprenti apprenti = apprentiService.getApprentiById(dto.getApprentiId())
+                .orElseThrow(() -> new ResourceNotFoundException("Aucun apprenti trouvé avec l'id " + dto.getApprentiId()));
+
+        Visite visite = new Visite();
+        visite.setApprenti(apprenti);
+        visite.setDateVisite(dto.getDateVisite());
+        visite.setFormat(dto.getFormat());
+        visite.setCommentaires(dto.getCommentaires());
+
         Visite createdVisite = visiteService.createVisite(visite);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdVisite);
     }

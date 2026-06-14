@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.dto.MaitreApprentissageDTO;
+import ytg.projetjavaytg.models.Entreprise;
 import ytg.projetjavaytg.models.MaitreApprentissage;
+import ytg.projetjavaytg.services.EntrepriseService;
 import ytg.projetjavaytg.services.MaitreApprentissageService;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
@@ -16,9 +19,12 @@ import java.util.List;
 public class MaitreApprentissageController {
 
     private final MaitreApprentissageService maitreApprentissageService;
+    private final EntrepriseService entrepriseService;
 
-    public MaitreApprentissageController(MaitreApprentissageService maitreApprentissageService) {
+    public MaitreApprentissageController(MaitreApprentissageService maitreApprentissageService,
+                                        EntrepriseService entrepriseService) {
         this.maitreApprentissageService = maitreApprentissageService;
+        this.entrepriseService = entrepriseService;
     }
 
     @GetMapping
@@ -35,7 +41,19 @@ public class MaitreApprentissageController {
     }
 
     @PostMapping
-    public ResponseEntity<MaitreApprentissage> createMaitreApprentissage(@RequestBody MaitreApprentissage maitreApprentissage) {
+    public ResponseEntity<MaitreApprentissage> createMaitreApprentissage(@RequestBody MaitreApprentissageDTO dto) {
+        Entreprise entreprise = entrepriseService.getEntrepriseById(dto.getEntrepriseId())
+                .orElseThrow(() -> new ResourceNotFoundException("Entreprise non trouvé avec id " + dto.getEntrepriseId()));
+
+        MaitreApprentissage maitreApprentissage = new MaitreApprentissage();
+        maitreApprentissage.setNom(dto.getNom());
+        maitreApprentissage.setPrenom(dto.getPrenom());
+        maitreApprentissage.setPoste(dto.getPoste());
+        maitreApprentissage.setEmail(dto.getEmail());
+        maitreApprentissage.setTelephone(dto.getTelephone());
+        maitreApprentissage.setRemarques(dto.getRemarques());
+        maitreApprentissage.setEntreprise(entreprise);
+
         MaitreApprentissage createdMaitre = maitreApprentissageService.createMaitreApprentissage(maitreApprentissage);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMaitre);
     }

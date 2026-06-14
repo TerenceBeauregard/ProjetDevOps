@@ -12,6 +12,9 @@ import ytg.projetjavaytg.controllers.api.ApprentiController;
 import ytg.projetjavaytg.models.Apprenti;
 import ytg.projetjavaytg.security.CustomUserDetailsService;
 import ytg.projetjavaytg.services.ApprentiService;
+import ytg.projetjavaytg.services.EntrepriseService;
+import ytg.projetjavaytg.services.MaitreApprentissageService;
+import ytg.projetjavaytg.services.UtilisateurService;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;
@@ -36,6 +39,15 @@ class ApprentiControllerTest {
 
     @MockBean
     private ApprentiService apprentiService;
+
+    @MockBean
+    private EntrepriseService entrepriseService;
+
+    @MockBean
+    private MaitreApprentissageService maitreApprentissageService;
+
+    @MockBean
+    private UtilisateurService utilisateurService;
 
     // Requis pour que Spring Security puisse construire l'AuthenticationManager
     @MockBean

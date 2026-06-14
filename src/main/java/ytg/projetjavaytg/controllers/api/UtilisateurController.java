@@ -3,6 +3,7 @@ package ytg.projetjavaytg.controllers.api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.dto.UtilisateurDTO;
 import ytg.projetjavaytg.models.Utilisateur;
 import ytg.projetjavaytg.services.UtilisateurService;
 
@@ -35,7 +36,15 @@ public class UtilisateurController {
     }
 
     @PostMapping
-    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody Utilisateur utilisateur) {
+    public ResponseEntity<Utilisateur> createUtilisateur(@RequestBody UtilisateurDTO dto) {
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setUsername(dto.getUsername());
+        utilisateur.setPassword(dto.getPassword());
+        utilisateur.setPrenom(dto.getPrenom());
+        utilisateur.setNom(dto.getNom());
+        utilisateur.setEmail(dto.getEmail());
+        utilisateur.setRole(dto.getRole());
+        utilisateur.setEnabled(dto.getEnabled());
         Utilisateur createdUtilisateur = utilisateurService.createUtilisateur(utilisateur);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUtilisateur);
     }

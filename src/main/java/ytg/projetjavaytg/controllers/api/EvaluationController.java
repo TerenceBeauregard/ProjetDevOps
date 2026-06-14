@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.dto.EvaluationDTO;
+import ytg.projetjavaytg.models.Apprenti;
 import ytg.projetjavaytg.models.Evaluation;
+import ytg.projetjavaytg.services.ApprentiService;
 import ytg.projetjavaytg.services.EvaluationService;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
@@ -16,9 +19,11 @@ import java.util.List;
 public class EvaluationController {
 
     private final EvaluationService evaluationService;
+    private final ApprentiService apprentiService;
 
-    public EvaluationController(EvaluationService evaluationService) {
+    public EvaluationController(EvaluationService evaluationService, ApprentiService apprentiService) {
         this.evaluationService = evaluationService;
+        this.apprentiService = apprentiService;
     }
 
     @GetMapping
@@ -35,7 +40,20 @@ public class EvaluationController {
     }
 
     @PostMapping
-    public ResponseEntity<Evaluation> createEvaluation(@RequestBody Evaluation evaluation) {
+    public ResponseEntity<Evaluation> createEvaluation(@RequestBody EvaluationDTO dto) {
+        Apprenti apprenti = apprentiService.getApprentiById(dto.getApprentiId())
+                .orElseThrow(() -> new ResourceNotFoundException("Apprenti non trouvé avec id " + dto.getApprentiId()));
+
+        Evaluation evaluation = new Evaluation();
+        evaluation.setApprenti(apprenti);
+        evaluation.setMemoireTheme(dto.getMemoireTheme());
+        evaluation.setMemoireNote(dto.getMemoireNote());
+        evaluation.setMemoireCommentaires(dto.getMemoireCommentaires());
+        evaluation.setSoutenanceDate(dto.getSoutenanceDate());
+        evaluation.setSoutenanceNote(dto.getSoutenanceNote());
+        evaluation.setSoutenanceCommentaires(dto.getSoutenanceCommentaires());
+        evaluation.setRemarquesGenerales(dto.getRemarquesGenerales());
+
         Evaluation createdEvaluation = evaluationService.createEvaluation(evaluation);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEvaluation);
     }

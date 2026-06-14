@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ytg.projetjavaytg.dto.EvaluationFormDTO;
 import ytg.projetjavaytg.models.Apprenti;
 import ytg.projetjavaytg.models.Evaluation;
 import ytg.projetjavaytg.models.Visite;
@@ -103,7 +104,7 @@ public class EvaluationViewController {
     }
 
     @PostMapping("/save")
-    public String saveEvaluation(@ModelAttribute Evaluation evaluation,
+    public String saveEvaluation(@ModelAttribute EvaluationFormDTO form,
                                 @RequestParam Long apprentiId,
                                 @RequestParam(required = false) Long evaluationId,
                                 RedirectAttributes redirectAttributes) {
@@ -116,6 +117,14 @@ public class EvaluationViewController {
             }
 
             Apprenti apprenti = apprentiOpt.get();
+            Evaluation evaluation = new Evaluation();
+            evaluation.setMemoireTheme(form.getMemoireTheme());
+            evaluation.setMemoireNote(form.getMemoireNote());
+            evaluation.setMemoireCommentaires(form.getMemoireCommentaires());
+            evaluation.setSoutenanceDate(form.getSoutenanceDate());
+            evaluation.setSoutenanceNote(form.getSoutenanceNote());
+            evaluation.setSoutenanceCommentaires(form.getSoutenanceCommentaires());
+            evaluation.setRemarquesGenerales(form.getRemarquesGenerales());
             evaluation.setApprenti(apprenti);
 
             if (evaluationId != null && evaluationId > 0) {

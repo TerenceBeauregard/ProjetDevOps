@@ -10,6 +10,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ytg.projetjavaytg.controllers.api.VisiteController;
 import ytg.projetjavaytg.dto.CreateVisiteDTO;
+import ytg.projetjavaytg.dto.VisiteDTO;
 import ytg.projetjavaytg.models.Apprenti;
 import ytg.projetjavaytg.models.Visite;
 import ytg.projetjavaytg.security.CustomUserDetailsService;
@@ -96,15 +97,23 @@ class VisiteControllerTest {
     @Test
     @WithMockUser
     void createVisite_retourne201AvecVisiteCree() throws Exception {
+        Apprenti apprenti = new Apprenti();
+        apprenti.setId(1L);
+
         Visite v = new Visite();
         v.setId(1L);
         v.setFormat("hybride");
+        when(apprentiService.getApprentiById(1L)).thenReturn(Optional.of(apprenti));
         when(visiteService.createVisite(any(Visite.class))).thenReturn(v);
+
+        VisiteDTO dto = new VisiteDTO();
+        dto.setApprentiId(1L);
+        dto.setFormat("hybride");
 
         mockMvc.perform(post("/api/visites")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(v)))
+                        .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.format").value("hybride"));
     }

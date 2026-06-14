@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ytg.projetjavaytg.dto.EntrepriseFormDTO;
 import ytg.projetjavaytg.models.Entreprise;
 import ytg.projetjavaytg.services.EntrepriseService;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
@@ -35,7 +36,11 @@ public class EntrepriseController {
     }
 
     @PostMapping
-    public ResponseEntity<Entreprise> createEntreprise(@RequestBody Entreprise entreprise) {
+    public ResponseEntity<Entreprise> createEntreprise(@RequestBody EntrepriseFormDTO dto) {
+        Entreprise entreprise = new Entreprise();
+        entreprise.setRaisonSociale(dto.getRaisonSociale());
+        entreprise.setAdresse(dto.getAdresse());
+        entreprise.setInformationsAcces(dto.getInformationsAcces());
         Entreprise createdEntreprise = entrepriseService.createEntreprise(entreprise);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdEntreprise);
     }

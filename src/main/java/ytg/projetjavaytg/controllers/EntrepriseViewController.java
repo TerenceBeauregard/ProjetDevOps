@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ytg.projetjavaytg.dto.EntrepriseFormDTO;
 import ytg.projetjavaytg.models.Entreprise;
 import ytg.projetjavaytg.services.EntrepriseService;
 import ytg.projetjavaytg.utils.SecurityUtils;
@@ -34,8 +35,12 @@ public class EntrepriseViewController {
     }
 
     @PostMapping("/create")
-    public String createEntreprise(@ModelAttribute Entreprise entreprise, RedirectAttributes redirectAttributes) {
+    public String createEntreprise(@ModelAttribute EntrepriseFormDTO form, RedirectAttributes redirectAttributes) {
         try {
+            Entreprise entreprise = new Entreprise();
+            entreprise.setRaisonSociale(form.getRaisonSociale());
+            entreprise.setAdresse(form.getAdresse());
+            entreprise.setInformationsAcces(form.getInformationsAcces());
             entrepriseService.createEntreprise(entreprise);
             redirectAttributes.addFlashAttribute("success", "L'entreprise a été créée avec succès !");
             return "redirect:/entreprises";
