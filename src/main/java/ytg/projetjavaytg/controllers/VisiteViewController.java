@@ -58,11 +58,9 @@ public class VisiteViewController {
         while (!cursor.isAfter(end)) {
             List<DayView> week = new ArrayList<>();
             for (int i = 0; i < 7; i++) {
-                DayView dv = new DayView();
-                dv.date = cursor;
-                dv.day = cursor.getDayOfMonth();
-                dv.otherMonth = cursor.getMonthValue() != base.getMonthValue();
-                dv.visites = visitesByDate.getOrDefault(cursor, Collections.emptyList());
+                DayView dv = new DayView(cursor, cursor.getDayOfMonth(),
+                        cursor.getMonthValue() != base.getMonthValue(),
+                        visitesByDate.getOrDefault(cursor, Collections.emptyList()));
                 week.add(dv);
                 cursor = cursor.plusDays(1);
             }
@@ -107,10 +105,6 @@ public class VisiteViewController {
         return "redirect:/visites" + (monthOffset != null ? "?month=" + monthOffset : "");
     }
 
-    private static class DayView {
-        public LocalDate date;
-        public int day;
-        public boolean otherMonth;
-        public List<Visite> visites = Collections.emptyList();
+    private record DayView(LocalDate date, int day, boolean otherMonth, List<Visite> visites) {
     }
 }
