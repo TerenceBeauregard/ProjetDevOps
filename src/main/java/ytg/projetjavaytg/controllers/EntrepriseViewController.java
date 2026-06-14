@@ -13,6 +13,7 @@ import ytg.projetjavaytg.utils.SecurityUtils;
 @RequestMapping("/entreprises")
 public class EntrepriseViewController {
 
+    public static final String ERROR = "error";
     private final EntrepriseService entrepriseService;
 
     public EntrepriseViewController(EntrepriseService entrepriseService) {
@@ -39,7 +40,7 @@ public class EntrepriseViewController {
             redirectAttributes.addFlashAttribute("success", "L'entreprise a été créée avec succès !");
             return "redirect:/entreprises";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la création : " + e.getMessage());
+            redirectAttributes.addFlashAttribute(ERROR, "Erreur lors de la création : " + e.getMessage());
             return "redirect:/entreprises/create";
         }
     }
@@ -47,14 +48,12 @@ public class EntrepriseViewController {
     @PostMapping("/{id}/delete")
     public String deleteEntreprise(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            entrepriseService.getEntrepriseById(id).ifPresent(entreprise -> {
-                entrepriseService.deleteEntreprise(id);
-            });
+            entrepriseService.getEntrepriseById(id).ifPresent(entreprise -> entrepriseService.deleteEntreprise(id));
             redirectAttributes.addFlashAttribute("success", "L'entreprise a été supprimée avec succès !");
         } catch (DataIntegrityViolationException e) {
-            redirectAttributes.addFlashAttribute("error", "Impossible de supprimer cette entreprise. Elle est associée à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");
+            redirectAttributes.addFlashAttribute(ERROR, "Impossible de supprimer cette entreprise. Elle est associée à un ou plusieurs apprentis. Veuillez d'abord modifier ou supprimer ces apprentis.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Erreur lors de la suppression : " + e.getMessage());
+            redirectAttributes.addFlashAttribute(ERROR, "Erreur lors de la suppression : " + e.getMessage());
         }
         return "redirect:/entreprises";
     }
