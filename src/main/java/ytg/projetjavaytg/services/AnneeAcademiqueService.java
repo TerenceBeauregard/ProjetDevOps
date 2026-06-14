@@ -1,5 +1,6 @@
 package ytg.projetjavaytg.services;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ytg.projetjavaytg.models.AnneeAcademique;
@@ -9,15 +10,17 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.List;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 @Service
 public class AnneeAcademiqueService {
 
     private final AnneeAcademiqueRepository anneeAcademiqueRepository;
+    private final AnneeAcademiqueService self;
 
-    public AnneeAcademiqueService(AnneeAcademiqueRepository anneeAcademiqueRepository) {
+    public AnneeAcademiqueService(AnneeAcademiqueRepository anneeAcademiqueRepository,
+                                  @Lazy AnneeAcademiqueService self) {
         this.anneeAcademiqueRepository = anneeAcademiqueRepository;
+        this.self = self;
     }
 
     public String getAnneeAcademiqueEnCours() {
@@ -27,7 +30,7 @@ public class AnneeAcademiqueService {
         }
         int currentYear = java.time.Year.now().getValue();
         String anneeActuelle = currentYear + "-" + (currentYear + 1);
-        creerEtActiverAnnee(anneeActuelle);
+        self.creerEtActiverAnnee(anneeActuelle);
         return anneeActuelle;
     }
 
@@ -67,6 +70,6 @@ public class AnneeAcademiqueService {
         return anneeAcademiqueRepository.findAll().stream()
                 .map(AnneeAcademique::getAnnee)
                 .sorted(Comparator.reverseOrder())
-                .collect(Collectors.toList());
+                .toList();
     }
 }
