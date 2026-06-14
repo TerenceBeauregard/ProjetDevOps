@@ -5,12 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ytg.projetjavaytg.Models.Apprenti;
-import ytg.projetjavaytg.Repositories.ApprentiRepository;
-import ytg.projetjavaytg.Repositories.EvaluationRepository;
-import ytg.projetjavaytg.Repositories.VisiteRepository;
-import ytg.projetjavaytg.Services.AnneeAcademiqueService;
-import ytg.projetjavaytg.Services.ApprentiService;
+import ytg.projetjavaytg.models.Apprenti;
+import ytg.projetjavaytg.repositories.ApprentiRepository;
+import ytg.projetjavaytg.repositories.EvaluationRepository;
+import ytg.projetjavaytg.repositories.VisiteRepository;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.Collections;

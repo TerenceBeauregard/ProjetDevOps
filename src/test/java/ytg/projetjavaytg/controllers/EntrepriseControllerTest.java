@@ -8,10 +8,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ytg.projetjavaytg.Controllers.api.EntrepriseController;
-import ytg.projetjavaytg.Models.Entreprise;
-import ytg.projetjavaytg.Security.CustomUserDetailsService;
-import ytg.projetjavaytg.Services.EntrepriseService;
+import ytg.projetjavaytg.controllers.api.EntrepriseController;
+import ytg.projetjavaytg.models.Entreprise;
+import ytg.projetjavaytg.security.CustomUserDetailsService;
+import ytg.projetjavaytg.services.EntrepriseService;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.List;

@@ -5,9 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ytg.projetjavaytg.Models.Entreprise;
-import ytg.projetjavaytg.Repositories.EntrepriseRepository;
-import ytg.projetjavaytg.Services.EntrepriseService;
+import ytg.projetjavaytg.models.Entreprise;
+import ytg.projetjavaytg.repositories.EntrepriseRepository;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.util.Collections;

@@ -5,9 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ytg.projetjavaytg.Models.Visite;
-import ytg.projetjavaytg.Repositories.VisiteRepository;
-import ytg.projetjavaytg.Services.VisiteService;
+import ytg.projetjavaytg.models.Visite;
+import ytg.projetjavaytg.repositories.VisiteRepository;
 import ytg.projetjavaytg.exception.ResourceNotFoundException;
 
 import java.time.LocalDate;
