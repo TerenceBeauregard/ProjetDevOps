@@ -9,7 +9,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ytg.projetjavaytg.controllers.api.ApprentiController;
+import ytg.projetjavaytg.dto.ApprentiDTO;
 import ytg.projetjavaytg.models.Apprenti;
+import ytg.projetjavaytg.models.Entreprise;
+import ytg.projetjavaytg.models.MaitreApprentissage;
+import ytg.projetjavaytg.models.Utilisateur;
 import ytg.projetjavaytg.security.CustomUserDetailsService;
 import ytg.projetjavaytg.services.ApprentiService;
 import ytg.projetjavaytg.services.EntrepriseService;
@@ -23,6 +27,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -119,6 +124,61 @@ class ApprentiControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.nom").value("Martin"))
                 .andExpect(jsonPath("$.prenom").value("Sophie"));
+    }
+
+    @Test
+    @WithMockUser
+    void getByRaisonSociale_retourne200AvecListe() throws Exception {
+        Apprenti a = new Apprenti();
+        a.setId(1L);
+        a.setNom("Dupont");
+        when(apprentiService.getAllByRaisonSociale("Acme")).thenReturn(List.of(a));
+
+        mockMvc.perform(get("/api/apprentis/by-raison-sociale/Acme"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nom").value("Dupont"));
+    }
+
+    @Test
+    @WithMockUser
+    void createApprenti_resoutEntrepriseMaitreEtTuteurSiPresents() throws Exception {
+        Entreprise entreprise = new Entreprise();
+        entreprise.setId(1L);
+        entreprise.setRaisonSociale("Acme");
+        when(entrepriseService.getEntrepriseById(1L)).thenReturn(Optional.of(entreprise));
+
+        MaitreApprentissage maitre = new MaitreApprentissage();
+        maitre.setId(2L);
+        maitre.setNom("Durand");
+        when(maitreApprentissageService.getMaitreApprentissageById(2L)).thenReturn(Optional.of(maitre));
+
+        Utilisateur tuteur = new Utilisateur();
+        tuteur.setId(3L);
+        tuteur.setNom("Curie");
+        when(utilisateurService.getUtilisateurById(3L)).thenReturn(Optional.of(tuteur));
+
+        Apprenti a = new Apprenti();
+        a.setId(1L);
+        a.setNom("Martin");
+        when(apprentiService.createApprenti(any(Apprenti.class))).thenReturn(a);
+
+        ApprentiDTO dto = new ApprentiDTO();
+        dto.setNom("Martin");
+        dto.setPrenom("Sophie");
+        dto.setEntrepriseId(1L);
+        dto.setMaitreApprentissageId(2L);
+        dto.setTuteurEnseignantId(3L);
+
+        mockMvc.perform(post("/api/apprentis")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.nom").value("Martin"));
+
+        verify(entrepriseService).getEntrepriseById(1L);
+        verify(maitreApprentissageService).getMaitreApprentissageById(2L);
+        verify(utilisateurService).getUtilisateurById(3L);
     }
 
     @Test
